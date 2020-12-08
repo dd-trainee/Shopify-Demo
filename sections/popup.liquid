@@ -1,0 +1,253 @@
+
+
+{%- if section.settings.show_popup -%}
+{%- unless section.settings.show_only_on_index and template != 'index' -%}
+
+<style>
+@import url(https://fonts.googleapis.com/css?family=Fauna+One|Muli);
+
+  h3{
+  font-size: 18px;
+  text-align: center;
+  border-bottom: 1px solid black;
+  padding-bottom: 5px;
+  }
+  b{
+  font-size:18px;
+  text-shadow:1px 0px 1px gray;
+  }
+  #popup{
+  padding-top:80px;
+  }
+  .forms{
+  border-radius: 10px;
+  padding: 20px 30px;
+  box-shadow: 0 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  }
+  input{
+  width:100%;
+  height:35px;
+  margin-top:5px;
+  border:1px solid #999;
+  border-radius:3px;
+  padding:5px;
+  }
+  input[type=button]{
+  background-color:#123456;
+  border:1px solid white;
+  font-family: 'Fauna One', serif;
+  font-Weight:bold;
+  font-size:18px;
+  color:white;
+  width:100%;
+  }
+  #newslatterdiv{
+  opacity:1.0;
+  background-color: rgba(0,0,0,0.6);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  display: none;
+  }
+
+  #formId{
+  width:350px;
+  margin:0px;
+  background-color: #eaeaea;
+  font-family: 'Fauna One', serif;
+  position: relative;
+  border: 3px solid #ebeef0;
+  left: 50%;
+  top: 50%;
+  margin-left:-210px;
+  margin-top:-158px;
+  }
+
+</style>
+
+<script>
+$(document).ready(function() {
+  setTimeout(popup, 3000);
+  function popup() {
+  $("#newslatterdiv").css("display", "block");
+  }
+ 
+  
+  //outside toch close form
+  window.onclick = function(event) {
+  if (event.target == newslatterdiv) {
+   newslatterdiv.style.display = "none";
+  }
+}
+});
+</script>
+
+<div id="newslatterdiv">
+   {%- assign formId = 'formId' -%}
+  	{% assign formClass= 'forms' %}
+   {% form 'customer', id: formId, novalidate: 'novalidate', class: formClass %}
+    <h3>Newslater Form</h3>
+    {%- if form.posted_successfully? -%}
+        <p class="form-message form-message--success" tabindex="-1" data-form-status>
+          {{ 'general.newsletter_form.confirmation' | t }}
+        </p>
+    {%- endif -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="input-group {% if form.errors %} input-group--error{% endif %}">
+        <input type="email"
+          name="contact[email]"
+          id="{{ formId }}-email"
+          class="input-group__field newsletter__input{% if form.errors %} input--error{% endif %}"
+          value="{{ form.email }}"
+          placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+          aria-label="{{ 'general.newsletter_form.email_placeholder' | t }}"
+          aria-required="true"
+          required
+          autocorrect="off"
+          autocapitalize="off"
+          {% if form.errors %}
+            aria-invalid="true"
+            aria-describedby="{{ formId }}-email-error"
+            data-form-status
+          {% endif %}>
+        <span class="input-group__btn">
+          <button type="submit" class="btn newsletter__submit" name="commit" >
+            <span class="newsletter__submit-text--large">{{ 'general.newsletter_form.submit' | t }}</span>
+          </button>
+        </span>
+      </div>
+      {% if form.errors contains 'email' %}
+        <span id="{{ formId }}-email-error" class="input-error-message">
+          <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+          {% include 'icon-error' %}
+          <span class="site-footer__newsletter-error">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
+        </span>
+      {% endif %}
+   {% endform %}
+    
+<!--<form class="form" action="#" id="newslatter">
+      <label>Email : </label>
+      <input type="email" id="email" placeholder="jhon@gmail.com"/><br/>
+      <br/>
+      <input type="button" id="send" value="Send"/>
+      <br/>
+    </form> -->
+</div>
+{% endunless %}
+{%-endif-%}
+
+
+
+
+{% comment %}
+
+{%- if section.settings.show_popup -%}
+  {%- unless section.settings.show_only_on_index and template != 'index' -%}
+    {%- unless section.settings.show_only_for_visitors and customer -%}
+      {% capture section_settings %}
+        {
+          "apparitionDelay": {{ section.settings.apparition_delay | json }},
+          "showOnlyOnce": {{ section.settings.show_only_once | json }}
+        }
+      {% endcapture %}
+
+      <aside class="NewsletterPopup" data-section-id="{{ section.id }}" data-section-type="newsletter-popup" data-section-settings='{{ section_settings }}' aria-hidden="true">
+        <button class="NewsletterPopup__Close" data-action="close-popup" aria-label="{{ 'general.popup.close' | t }}">{% include 'icon' with 'close' %}</button>
+
+        {%- if section.settings.title != blank -%}
+          <h2 class="NewsletterPopup__Heading Heading">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.content != blank -%}
+          <div class="NewsletterPopup__Content">
+            {{ section.settings.content }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_newsletter -%}
+          {%- form 'customer', id: 'newsletter-popup', class: 'NewsletterPopup__Form' -%}
+            {%- if form.posted_successfully? -%}
+              <p class="Form__Alert Alert Alert--success">{{ 'general.popup.success' | t }}</p>
+            {%- else -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+
+              <input type="email" name="contact[email]" class="Form__Input" required="required" aria-label="{{ 'general.popup.email_placeholder' | t }}" placeholder="{{ 'general.popup.email_placeholder' | t }}">
+              <button class="Form__Submit Button Button--primary Button--full" type="submit">{{ 'general.popup.submit' | t }}</button>
+            {%- endif -%}
+          {%- endform -%}
+        {%- endif -%}
+      </aside>
+    {%- endunless -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{% endcomment %}
+
+
+
+
+
+{% schema %}
+{
+  "name": "Popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_popup",
+      "label": "Enable",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_only_on_index",
+      "label": "Show only on home page",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_only_for_visitors",
+      "label": "Show only for visitors",
+      "info": "Customers who have created an account on your shop won't see it.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_only_once",
+      "label": "Show only once per customer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Popup"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p>You can use this popup to display some useful information to your customers.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter form",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "apparition_delay",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "label": "Delay until the popup appears",
+      "default": 5
+    }
+  ]
+}
+{% endschema %}
