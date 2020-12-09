@@ -1,49 +1,363 @@
 
-
-{%- if section.settings.show_popup -%}
-{%- unless section.settings.show_only_on_index and template != 'index' -%}
-
 <style>
-@import url(https://fonts.googleapis.com/css?family=Fauna+One|Muli);
+  
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed);
 
-  h3{
-  font-size: 18px;
-  text-align: center;
-  border-bottom: 1px solid black;
-  padding-bottom: 5px;
+  
+@-webkit-keyframes float {
+  0% {
+    transform: translatey(0px);
+    transform: translatex(0px);
   }
-  b{
-  font-size:18px;
-  text-shadow:1px 0px 1px gray;
+  50% {
+    transform: translatey(-30px);
+    transform: translatex(20px);
   }
-  #popup{
-  padding-top:80px;
+  100% {
+    transform: translatey(0px);
+    transform: translatex(0px);
   }
-  .forms{
-  border-radius: 10px;
-  padding: 20px 30px;
-  box-shadow: 0 0 10px;
-  font-size: 14px;
+}
+@-moz-keyframes float {
+  0% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+  }
+  50% {
+    transform: translatey(-30px);
+    transform: translatex(20px);
+  }
+  100% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+  }
+}
+@-o-keyframes float {
+  0% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+  }
+  50% {
+    transform: translatey(-30px);
+    transform: translatex(20px);
+  }
+  100% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+  }
+}
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+  }
+  50% {
+    transform: translatey(-30px);
+    transform: translatex(20px);
+  }
+  100% {
+    transform: translatey(0px);
+    transform: translatex(0px);
+  }
+}
+/* RESET
+========================================== */
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BUTTON
+========================================== */
+.button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.button button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-family: inherit;
+  background-color: #ffffff;
+  border: 0;
+  padding: 15px 25px;
+  color: #000000;
+  text-transform: uppercase;
+  font-size: 21px;
+  letter-spacing: 1px;
+  width: 200px;
+  overflow: hidden;
+  outline: 0;
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+  visibility: visible;
+  opacity: 1;
   font-weight: bold;
+  box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.6);
+}
+.button button:hover {
+  cursor: pointer;
+  background-color: #8e6ac1;
+  color: #ffffff;
+}
+.button button span {
+  opacity: 1;
+}
+.button.clicked button {
+  visibility: hidden;
+  oacity: 0;
+}
+
+/* POP-UP
+========================================== */
+.pop-up {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) scale(0.9);
+  -moz-transform: translate(-50%, -50%) scale(0.9);
+  -ms-transform: translate(-50%, -50%) scale(0.9);
+  -o-transform: translate(-50%, -50%) scale(0.9);
+  transform: translate(-50%, -50%) scale(0.9);
+  overflow-y: auto;
+  box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.4);
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+  z-index: 10;
+  background-color: #ffffff;
+  width: 100%;
+  height: 100%;
+}
+@media (min-width: 768px) {
+  .pop-up {
+    width: calc(100% - 40px);
+    height: auto;
+    max-width: 900px;
   }
-  input{
-  width:100%;
-  height:35px;
-  margin-top:5px;
-  border:1px solid #999;
-  border-radius:3px;
-  padding:5px;
+}
+.pop-up .content {
+  width: 100%;
+  max-width: 900px;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  min-height: 100vh;
+}
+@media (min-width: 768px) {
+  .pop-up .content {
+    min-height: inherit;
   }
-  input[type=button]{
-  background-color:#123456;
-  border:1px solid white;
-  font-family: 'Fauna One', serif;
-  font-Weight:bold;
-  font-size:18px;
-  color:white;
-  width:100%;
+}
+.pop-up .content .container {
+  padding: 100px 20px 140px;
+}
+@media (min-width: 568px) {
+  .pop-up .content .container {
+    padding: 50px 20px 80px;
   }
-  #newslatterdiv{
+}
+@media (min-width: 768px) {
+  .pop-up .content .container {
+    padding: 70px 0px 90px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+.pop-up .content .close {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1.1rem;
+  letter-spacing: 0.05rem;
+  color: #3e4146;
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+}
+.pop-up .content .close:hover {
+  cursor: pointer;
+  color: #f66867;
+}
+.pop-up .content .dots .dot {
+  position: absolute;
+  border-radius: 100%;
+  z-index: 11;
+}
+.pop-up .content .dots .dot:nth-of-type(1) {
+  top: -80px;
+  right: -80px;
+  width: 160px;
+  height: 160px;
+  background-color: #689bf6;
+  -webkit-animation: float 6s ease-in-out infinite;
+  -moz-animation: float 6s ease-in-out infinite;
+  -o-animation: float 6s ease-in-out infinite;
+  animation: float 6s ease-in-out infinite;
+}
+@media (min-width: 768px) {
+  .pop-up .content .dots .dot:nth-of-type(1) {
+    top: -190px;
+    right: -190px;
+    width: 380px;
+    height: 380px;
+  }
+}
+.pop-up .content .dots .dot:nth-of-type(2) {
+  bottom: -120px;
+  left: -120px;
+  width: 240px;
+  height: 240px;
+  background-color: #f66867;
+  -webkit-animation: float 8s ease-in-out infinite;
+  -moz-animation: float 8s ease-in-out infinite;
+  -o-animation: float 8s ease-in-out infinite;
+  animation: float 8s ease-in-out infinite;
+}
+.pop-up .content .dots .dot:nth-of-type(3) {
+  bottom: -50px;
+  right: -50px;
+  width: 100px;
+  height: 100px;
+  background-color: #ffd84c;
+  -webkit-animation: float 4s ease-in-out infinite;
+  -moz-animation: float 4s ease-in-out infinite;
+  -o-animation: float 4s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite;
+}
+.pop-up .content .title h1 {
+  text-align: center;
+  color: #f66867;
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 2.8rem;
+  letter-spacing: 0.05rem;
+}
+.pop-up .content img {
+  width: 100%;
+  max-width: 220px;
+  display: inline-block;
+  margin: 30px 0 40px 0;
+  opacity: 0;
+  -webkit-transform: translateX(60px);
+  -moz-transform: translateX(60px);
+  -ms-transform: translateX(60px);
+  -o-transform: translateX(60px);
+  transform: translateX(60px);
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  transition: 0.2s;
+  -webkit-backface-visibility: hidden;
+}
+@media (min-width: 768px) {
+  .pop-up .content img {
+    max-width: 300px;
+  }
+}
+.pop-up .content .subscribe h1 {
+  font-size: 1.5rem;
+  color: #3e4146;
+  line-height: 130%;
+  letter-spacing: 0.07rem;
+  margin-bottom: 30px;
+}
+.pop-up .content .subscribe h1 span {
+  color: #f66867;
+}
+.pop-up .content .subscribe form {
+  overflow: hidden;
+}
+.pop-up .content .subscribe form input {
+  width: 100%;
+  float: left;
+  padding: 15px 20px;
+  text-align: center;
+  font-family: inherit;
+  font-size: 1.1rem;
+  letter-spacing: 0.05rem;
+  outline: 0;
+}
+.pop-up .content .subscribe form input[type=email] {
+  margin-bottom: 15px;
+  border: 1px solid #bec1c5;
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+}
+@media (min-width: 768px) {
+  .pop-up .content .subscribe form input[type=email] {
+    margin-bottom: 0px;
+    width: 75%;
+    border-right-width: 0px;
+  }
+}
+.pop-up .content .subscribe form input[type=email]:focus {
+  border-color: #3e4146;
+}
+.pop-up .content .subscribe form input[type=submit] {
+  background-color: #8e6ac1;
+  color: #ffffff;
+  border: 1px solid #8e6ac1;
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
+}
+@media (min-width: 768px) {
+  .pop-up .content .subscribe form input[type=submit] {
+    width: 25%;
+  }
+}
+.pop-up .content .subscribe form input[type=submit]:hover {
+  cursor: pointer;
+  background-color: #7349af;
+  border-color: #7349af;
+}
+.pop-up.open {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transform: translate(-50%, -50%) scale(1);
+  -moz-transform: translate(-50%, -50%) scale(1);
+  -ms-transform: translate(-50%, -50%) scale(1);
+  -o-transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
+}
+.pop-up.open img {
+  opacity: 1;
+  -webkit-transition: 1s;
+  -moz-transition: 1s;
+  -o-transition: 1s;
+  transition: 1s;
+  -webkit-transition-delay: 0.3s;
+  -moz-transition-delay: 0.3s;
+  -o-transition-delay: 0.3s;
+  transition-delay: 0.3s;
+  -webkit-transform: translateX(0px);
+  -moz-transform: translateX(0px);
+  -ms-transform: translateX(0px);
+  -o-transform: translateX(0px);
+  transform: translateX(0px);
+} 
+
+#newslatterdiv{
   opacity:1.0;
   background-color: rgba(0,0,0,0.6);
   position: fixed;
@@ -52,93 +366,116 @@
   height: 100%;
   width: 100%;
   display: none;
-  }
-
-  #formId{
-  width:350px;
-  margin:0px;
-  background-color: #eaeaea;
-  font-family: 'Fauna One', serif;
-  position: relative;
-  border: 3px solid #ebeef0;
-  left: 50%;
-  top: 50%;
-  margin-left:-210px;
-  margin-top:-158px;
-  }
-
+}  
+  
+  
 </style>
+
+
 
 <script>
 $(document).ready(function() {
-  setTimeout(popup, 3000);
+  var delay=$('.delay').data('delay');
+  setTimeout(popup, delay);
   function popup() {
   $("#newslatterdiv").css("display", "block");
+  $(".pop-up").addClass('open');
   }
- 
   
-  //outside toch close form
-  window.onclick = function(event) {
-  if (event.target == newslatterdiv) {
-   newslatterdiv.style.display = "none";
-  }
-}
+  $('.pop-up .close').click(function(){
+  $('.pop-up').removeClass('open');
+  $("#newslatterdiv").css("display", "none");
+});
 });
 </script>
 
+{% assign delays = section.settings.apparition_delay %}
+<div class="delay" data-delay= {{ delays | append: '000' }}>
+</div>
+
+{%- if section.settings.show_popup -%}
+{%- unless section.settings.show_only_on_index and template != 'index' -%}
+
+{%- unless section.settings.show_only_for_visitors and customer -%}
 <div id="newslatterdiv">
-   {%- assign formId = 'formId' -%}
-  	{% assign formClass= 'forms' %}
-   {% form 'customer', id: formId, novalidate: 'novalidate', class: formClass %}
-    <h3>Newslater Form</h3>
-    {%- if form.posted_successfully? -%}
-        <p class="form-message form-message--success" tabindex="-1" data-form-status>
-          {{ 'general.newsletter_form.confirmation' | t }}
-        </p>
-    {%- endif -%}
-      <input type="hidden" name="contact[tags]" value="newsletter">
-      <div class="input-group {% if form.errors %} input-group--error{% endif %}">
-        <input type="email"
-          name="contact[email]"
-          id="{{ formId }}-email"
-          class="input-group__field newsletter__input{% if form.errors %} input--error{% endif %}"
-          value="{{ form.email }}"
-          placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
-          aria-label="{{ 'general.newsletter_form.email_placeholder' | t }}"
-          aria-required="true"
-          required
-          autocorrect="off"
-          autocapitalize="off"
-          {% if form.errors %}
-            aria-invalid="true"
-            aria-describedby="{{ formId }}-email-error"
-            data-form-status
-          {% endif %}>
-        <span class="input-group__btn">
-          <button type="submit" class="btn newsletter__submit" name="commit" >
-            <span class="newsletter__submit-text--large">{{ 'general.newsletter_form.submit' | t }}</span>
-          </button>
-        </span>
+<div class="pop-up">
+  <div class="content">
+    <div class="container">
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
       </div>
-      {% if form.errors contains 'email' %}
-        <span id="{{ formId }}-email-error" class="input-error-message">
-          <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
-          {% include 'icon-error' %}
-          <span class="site-footer__newsletter-error">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
-        </span>
+      
+      <span class="close">{% include 'icon-close' %}</span>
+      
+      {% if section.settings.title != blank %}
+      <div class="title">
+        <h1>{{ section.settings.title | escape }}</h1>
+      </div>
       {% endif %}
-   {% endform %}
-    
-<!--<form class="form" action="#" id="newslatter">
-      <label>Email : </label>
-      <input type="email" id="email" placeholder="jhon@gmail.com"/><br/>
-      <br/>
-      <input type="button" id="send" value="Send"/>
-      <br/>
-    </form> -->
+      
+     
+      <img src="{{ section.settings.image | img_url: 'master' }}">
+      
+      <div class="subscribe">
+        {% if section.settings.content != blank %}
+        <h1>
+          {{ section.settings.content | strip }}
+        </h1>
+        {% endif %}
+      
+        {% if section.settings.show_newsletter %}
+        
+        {% form 'customer' %}
+        
+		{%- if form.posted_successfully? -%}
+			<p class="form-message form-message--success" tabindex="-1" data-form-status>
+          		{{ 'general.newsletter_form.confirmation' | t }}
+          	</p>
+    	{%- endif -%}
+			<input type="hidden" name="contact[tags]" value="newsletter">
+        
+          	<input type="email" 
+                   name="contact[email]"
+                   id="{{ formId }}-email"
+                   value="{{ form.email }}"
+                   aria-required="true"
+          		   required
+          		   autocorrect="off"
+          		   autocapitalize="off"
+                   {% if form.errors %}
+                    aria-invalid="true"
+                    aria-describedby="{{ formId }}-email-error"
+                    data-form-status
+                   {% endif %}
+                   placeholder="Your email address"
+                   >
+       
+			<input  type="submit" class="btn newsletter__submit" name="commit" value="Subscribe">
+        
+            {% if form.errors contains 'email' %}
+              <span id="{{ formId }}-email-error" class="input-error-message">
+                <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+                {% include 'icon-error' %}
+                <span class="site-footer__newsletter-error">{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
+              </span>
+            {% endif %}
+        
+        {% endform %}
+        
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 {% endunless %}
+
+{% endunless %}
 {%-endif-%}
+
 
 
 
@@ -225,6 +562,11 @@ $(document).ready(function() {
       "id": "title",
       "label": "Heading",
       "default": "Popup"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Pic Image"
     },
     {
       "type": "richtext",
