@@ -1,0 +1,27 @@
+<script charset="utf-8" src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+<script>
+  UPLOADCARE_PUBLIC_KEY = '5294e11897e4dc763203';
+  
+  
+  var widget = uploadcare.Widget('[role=uploadcare-uploader]');
+  var productImage = document.querySelector('.product-featured-media');
+  
+  var frameSelector = document.getElementById('frame');
+  var uploadedImage = null;
+  var currentFrame = frameSelector.options[frameSelector.selectedIndex].dataset.frameId;
+  
+  widget.onUploadComplete(function (fileInfo) {
+    uploadedImage = fileInfo.cdnUrl;
+    productImage.src = uploadedImage + '-/resize/350x550/-/stretch/fill/-/resize/400x600/-/overlay/' + currentFrame + '/';
+    // clears the default srcset of the product image
+    productImage.dataset.srcset = productImage.srcset = '';
+});
+
+frameSelector.addEventListener('change', function (e) {
+    currentFrame = e.target.options[e.target.selectedIndex].dataset.frameId;
+    if (uploadedImage !== null) {
+      productImage.src = uploadedImage + '-/resize/350x550/-/stretch/fill/-/resize/400x600/-/overlay/' + currentFrame + '/';
+    }
+});
+  
+</script>

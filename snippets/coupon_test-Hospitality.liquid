@@ -1,0 +1,260 @@
+    <!-- coupon apply CSS and JS ================================================== -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
+  <link rel="stylesheet" href="https://api.addressnow.co.uk/css/addressnow-2.20.min.css?key=hu37-hz79-am46-wc91"/>
+ 
+
+
+<style>
+  
+.loader {
+  background: url({{ '25.gif' | asset_url }}) no-repeat center;
+  height: 65px;
+  width: 65px;
+  margin: 0 auto;
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+}
+
+.ui-menu .ui-menu-item a {
+  font-size: 12px;
+}
+.ui-autocomplete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1510 !important;
+  float: left;
+  display: none;
+  min-width: 160px;
+  width: 160px;
+  padding: 4px 0;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+}
+.ui-menu-item > a.ui-corner-all {
+  display: block;
+  padding: 3px 15px;
+  clear: both;
+  font-weight: normal;
+  line-height: 18px;
+  color: #555555;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.ui-state-hover, .ui-state-active {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #0088cc;
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  background-image: none;
+}
+  
+</style>
+
+
+<!-- coupon btn -->
+
+<div class="container">
+  <div class="venuDiv">
+    <button type="button" class="btn btn-info btn-lg btnSearchVenu" data-toggle="modal" data-target="#myModal">Click here to search venus</button>
+  </div>
+  <div id="venuDetail"></div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+  <input type="hidden" id="baseUrl" value="https://apps.dynamicdreamz.com/Help-for-Hospitality/">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <div class="loader-1"></div>
+        <div class="form-group">
+          <label>Search Venus</label>
+          <input type="text" class="form-control" id="dd_title" placeholder="Please enter venue name">
+          <!-- <a href="#" class="btn btn-primary" id="changeBtn" style="display: none">Change</a> -->
+        </div>
+        <div class="form-group">
+          <a href="#" id="clickHere" style="display: none">venue is not listed, click here</a>
+        </div>
+        <div class="form-group" id="RoyalMailDiv" style="display: none;">
+          <label>Royal Mail Address</label>
+          <div class="title1">
+            <input type="text" class="form-control" id="title1" placeholder="Please enter venue name">
+          </div>
+          <div style="margin-bottom: 10px;"></div>
+          <div class="title2" style="display: none">
+            <input type="text" class="form-control" id="title2" placeholder="">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="bntSubmit">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <script src="https://api.addressnow.co.uk/js/addressnow-2.20.min.js?key=hu37-hz79-am46-wc91"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
+
+<script>
+//coupon apply JS
+$(document).ready(function(){
+    $("#bntSubmit").prop('disabled', true);
+    var baseUrl = $("#baseUrl").val();
+  console.log('url==>',baseUrl);
+  	
+    $( "#dd_title" ).autocomplete({
+        search  : function(){$('.loader-1').addClass('loader');},
+        open    : function(){$('.loader-1').removeClass('loader');},
+        source: baseUrl+"welcome/get_venus/",
+        select: function(event, ui) {
+            var selected_val = ui.item.value;
+          console.log(selected_val);
+            if(selected_val == 'No Records Found') {
+                $("#clickHere").toggle();
+                ui.item.value = '';
+            } else {
+                var res = selected_val.split(" - ");
+                localStorage.setItem("loc_venu_name", res[0]);
+                localStorage.setItem("loc_venu_address", res[1]);
+                $("#bntSubmit").prop('disabled', false);
+            }
+        },
+        // close: function(el) {
+        //     el.target.value = '';
+        // }
+    });
+
+    $( "#title1" ).autocomplete({
+        source: baseUrl+"welcome/get_royal_address_venus/?",
+        search  : function(){$('.loader-1').addClass('loader');},
+        open    : function(){$('.loader-1').removeClass('loader');},
+        select: function(event, ui) {
+            var selected_val = ui.item.value;
+            var res = selected_val.split(" - ");
+            console.log("==> "+res[1]);
+            if(res[1]!=''){
+                venu_address = res[0];
+                venu_id = res[2];
+                $(".title2").css('display','block');
+                getData(venu_id,venu_address);
+            } 
+            else {
+                var index = res[0].indexOf(',');
+                var arr = [res[0].slice(0, index), res[0].slice(index + 1)];
+                localStorage.setItem("loc_venu_name", arr[0]);
+                localStorage.setItem("loc_venu_address", arr[1]);
+                $("#title").val(arr[0]+" "+arr[1]);
+                addVenuData(res[0],0);
+                // $("#changeBtn").css('display','inline-block');
+            }
+            $("#bntSubmit").prop('disabled', false);
+            $("#clickHere").toggle();
+        },          
+    });
+
+    $( "#clickHere" ).click(function() {
+        $("#RoyalMailDiv").toggle();
+    });
+
+    $( "#bntSubmit" ).click(function() {
+        venu_name = localStorage.getItem("loc_venu_name");
+        venu_address = localStorage.getItem("loc_venu_address");
+        $('#myModal').modal('hide');
+        $("#venuDetail").html(venu_name+" "+venu_address);
+        $(".btnSearchVenu").html("Change Venu");
+    });
+
+    $( ".btnSearchVenu" ).click(function() {
+        $("#title").val("");
+        $("#title1").val("");
+        $("#title2").val("");
+    });
+
+    // $( "#changeBtn" ).click(function() {
+    //     $("#title").val("");
+    //     $("#title1").val("");
+    //     $("#title2").val("");
+    //     $("#changeBtn").css('display','none');
+    // });
+});
+
+function getData(id,venu_address)
+{
+    $('.loader-1').addClass('loader');
+    var base_url = $("#baseUrl").val();
+    $.ajax({
+        method : "POST",
+        url : base_url+"welcome/get_more_result",
+        data : {"id":id,"venu_address":venu_address},
+        dataType : 'json',
+        success : function(data){
+            $( "#title2" ).autocomplete({
+                source: data,
+                select: function(event, ui) {
+                    var selected_val = ui.item.value;
+                    localStorage.setItem("loc_venu_name", venu_address);
+                    localStorage.setItem("loc_venu_address", selected_val);
+                    $("#title").val(venu_address+" "+selected_val);
+                    addVenuData(venu_address+" - "+selected_val,1);
+                    // $("#changeBtn").css('display','inline-block');
+                },
+                minLength:0
+            }).bind('focus', function(){ $(this).autocomplete("search"); } );
+            $( "#title2" ).focus();
+            $('.loader-1').removeClass('loader');
+        }, error:function(error){
+          console.log(error);
+        }
+    });
+}
+
+function addVenuData(selectedVenu,type)
+{
+    var base_url = $("#baseUrl").val();
+    $('.loader-1').addClass('loader');
+    console.log(selectedVenu+"==="+type);
+     $.ajax({
+        method : "POST",
+        url : base_url+"welcome/addVenuData",
+        data : {"selectedVenu":selectedVenu,"type":type},
+        dataType : 'html',
+        success : function(data){
+            $('.loader-1').removeClass('loader');
+            console.log(data);
+            $("#RoyalMailDiv").toggle();
+        }, error:function(error){
+          console.log(error);
+        }
+    });
+}  
+  
+</script>

@@ -1,0 +1,55 @@
+
+{% assign product = all_products['free-gift'] %}
+
+{% unless cart.item_count == 0 or product.empty? or product.variants.first.available == false %}
+
+  {% assign variant_id = product.variants.first.id %}
+
+	{% assign cart_total = cart.total_price %}
+
+  <script> 
+    
+  (function ($) {
+    
+    var cartItems = {{ cart.items | json }},
+        qtyInTheCart = 0,
+          cart_total=0,
+          cart_total={{ cart_total }},
+          //cart_total=Shopify.formatMoney(cart_total,theme.moneyFormat);
+    	  cart_price = parseFloat(cart_total / 100).toFixed(0);
+    
+    	  console.log(cart_price)
+        cartUpdates = {};
+    for (var i=0; i<cartItems.length; i++) {
+      if ( cartItems[i].id === {{ variant_id }} ) {
+        qtyInTheCart = cartItems[i].quantity; 
+        break;
+      }
+    }
+          
+    if ( ( cart_price < 5000 ) && ( qtyInTheCart > 0 ) ){
+      cartUpdates = { {{ variant_id }}: 0 }
+    }
+      else if ( (cart_price >= 5000 ) && ( qtyInTheCart !== 1 ) && ( cartItems.length >= 1 ) ) {
+      cartUpdates = { {{ variant_id }}: 1 }
+    }
+    else {
+      return;
+    }
+    var params = {
+      type: 'POST',
+      url: '/cart/update.js',
+      data: { updates: cartUpdates },
+      dataType: 'json',
+      success: function(stuff) { 
+        window.location.href = '/cart';
+      }
+    };
+    $.ajax(params);
+  })(jQuery);
+  </script>
+
+{% endunless %}
+
+
+

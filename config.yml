@@ -1,0 +1,6 @@
+development:
+  password: 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
+  theme_id: "113769611422"
+  store: https://dynamicdreamz-training.myshopify.com
+  ignore_files:
+  - config/settings_data.json
